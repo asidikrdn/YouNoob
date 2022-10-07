@@ -1,3 +1,5 @@
+const axios = require("axios");
+
 exports.handler = async function (event, context) {
   //Securely access environment variables here
   console.log(event);
@@ -5,10 +7,9 @@ exports.handler = async function (event, context) {
 
   try {
     const { query } = event.queryStringParameters;
-    let response = await fetch(
+    let response = await axios.get(
       `https://youtube138.p.rapidapi.com/search/?q=${query}`,
       {
-        method: event.httpMethod,
         headers: {
           "X-RapidAPI-Key": process.env.REACT_APP_FIRST_KEY,
           "X-RapidAPI-Host": "youtube138.p.rapidapi.com",

@@ -8,7 +8,7 @@ exports.handler = async function (event, context) {
     let response = await fetch(
       `https://youtube138.p.rapidapi.com/search/?q=${query}`,
       {
-        method: "GET",
+        method: event.httpMethod,
         headers: {
           "X-RapidAPI-Key": process.env.REACT_APP_FIRST_KEY,
           "X-RapidAPI-Host": "youtube138.p.rapidapi.com",

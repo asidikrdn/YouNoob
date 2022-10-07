@@ -14,20 +14,11 @@ const App = () => {
   const getListVideos = async (q) => {
     try {
       let response = await fetch(
-        `https://youtube138.p.rapidapi.com/search/?q=${encodeURIComponent(
+        `/.netlify/functions/getvideos?query=${encodeURIComponent(
           q
-        )}&hl=id&gl=ID`,
-        {
-          method: "GET",
-          headers: {
-            // "X-RapidAPI-Key": `${apiKey[indexApiKey]}`,
-            "X-RapidAPI-Key": process.env.REACT_APP_FIRST_KEY,
-            "X-RapidAPI-Host": "youtube138.p.rapidapi.com",
-          },
-        }
+        )}&hl=id&gl=ID`
       );
       if (!response.ok) {
-        // setIndexApiKey(indexApiKey + 1);
         throw new Error(
           "Error saat mengambil data dengan kode: " + response.status
         );
@@ -45,7 +36,7 @@ const App = () => {
         );
       }
     } catch (e) {
-      // console.log(e);
+      console.log(e);
     } finally {
       setLoading(false);
     }

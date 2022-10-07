@@ -64,7 +64,9 @@ const SearchResult = (props) => {
                               {content.video.title}
                             </Card.Title>
                             <Card.Subtitle as="small" className="opacity-75">
-                              {`${content.video.stats.views}x ditonton`}
+                              {content.video.stats.views !== undefined
+                                ? `${content.video.stats.views.toLocaleString()}x ditonton`
+                                : `LIVE`}
                               {"  "}
                               <i
                                 className="fa-solid fa-circle"

@@ -15,10 +15,14 @@ const Header = (props) => {
   const tombolCari = useRef();
 
   useEffect(() => {
-    let stringQuery =
-      props.query !== ""
-        ? props.query
-        : decodeURIComponent(window.location.search.replace(/\?\w=/, ""));
+    let stringQuery;
+    if (window.location.search.includes("?q=")) {
+      stringQuery =
+        props.query !== ""
+          ? props.query
+          : decodeURIComponent(window.location.search.replace(/\?q=/, ""));
+    }
+
     props.setQuery(stringQuery);
     setFormInput(props.query);
   }, [props]);

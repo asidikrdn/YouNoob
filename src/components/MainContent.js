@@ -31,7 +31,16 @@ const MainContent = (props) => {
             ></SearchResult>
           }
         ></Route>
-        <Route path="/watch" element={<Video />}></Route>
+        <Route
+          path="/watch"
+          element={
+            <Video
+              loading={props.loading}
+              videoDetails={props.videoDetails}
+              onGetVideoDetails={props.onGetVideoDetails}
+            />
+          }
+        ></Route>
       </Routes>
     </main>
   );

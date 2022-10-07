@@ -45,7 +45,9 @@ const Home = (props) => {
                       {content.video.author.title}
                     </Card.Subtitle>
                     <Card.Text as="small" className="d-block opacity-75">
-                      {`${content.video.stats.views}x ditonton`}
+                      {content.video.stats.views !== undefined
+                        ? `${content.video.stats.views.toLocaleString()}x ditonton`
+                        : `LIVE`}
                       {"  "}
                       <i
                         className="fa-solid fa-circle"

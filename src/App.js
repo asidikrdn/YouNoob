@@ -9,8 +9,38 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [listVideos, setListVideos] = useState([]);
   const [listChannels, setListChannels] = useState([]);
+  const [videoDetails, setVideoDetails] = useState([]);
   const [apiKey, setApiKey] = useState(process.env.REACT_APP_FIRST_KEY);
   const [errStatus, setErrStatus] = useState(false);
+
+  const getVideoDetails = async (videoId) => {
+    try {
+      let response = await fetch(
+        `https://youtube138.p.rapidapi.com/video/details/?id=${videoId}&hl=id&gl=ID`,
+        {
+          method: "GET",
+          headers: {
+            "X-RapidAPI-Key": apiKey,
+            "X-RapidAPI-Host": "youtube138.p.rapidapi.com",
+          },
+        }
+      );
+      if (!response.ok) {
+        setErrStatus(true);
+        throw new Error(
+          "Error saat mengambil data dengan kode: " + response.status
+        );
+      } else {
+        let data = await response.json();
+        setVideoDetails(data);
+        setErrStatus(false);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getListVideos = async (q) => {
     try {
@@ -71,14 +101,24 @@ const App = () => {
 
   useEffect(() => {
     if (errStatus === true) {
-      query === ""
-        ? getListVideos("berita terbaru indonesia")
-        : getListVideos(query);
+      if (window.location.pathname === "/") {
+        console.log("Home");
+        getListVideos("berita terbaru indonesia");
+      }
+      if (window.location.pathname === "/search") {
+        console.log("Search");
+        getListVideos(query);
+      }
+      if (window.location.pathname === "/watch") {
+        console.log("Video");
+        let videoId = decodeURI(window.location.search.replace(/\?v=/, ""));
+        getVideoDetails(videoId);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiKey]);
 
-  // console.log(apiKey);
+  console.log(apiKey);
   // console.log(query);
 
   return (
@@ -92,6 +132,8 @@ const App = () => {
         listVideos={listVideos}
         listChannels={listChannels}
         onGetListVideos={getListVideos}
+        videoDetails={videoDetails}
+        onGetVideoDetails={getVideoDetails}
       ></MainContent>
     </Router>
   );

@@ -1,0 +1,33 @@
+body {
+  background-color: rgb(24, 24, 24);
+}
+
+header .container-fluid {
+  background-color: rgba(36, 35, 37, 0.95);
+}
+
+header .container-fluid .fa-bars {
+  opacity: 80%;
+}
+
+header .container-fluid .fa-bars:hover,
+header .container-fluid .fa-bars.active {
+  opacity: 100%;
+}
+
+nav .container-fluid {
+  background-color: rgba(36, 35, 37, 0.95);
+  height: 100vh;
+  padding-top: 4em;
+}
+
+nav .container-fluid div {
+  cursor: pointer;
+  opacity: 80%;
+}
+
+nav .container-fluid div:hover,
+nav .container-fluid active {
+  cursor: pointer;
+  opacity: 100%;
+}

@@ -14,9 +14,17 @@ const App = () => {
   const getListVideos = async (q) => {
     try {
       let response = await fetch(
-        `/.netlify/functions/getvideos?query=${encodeURIComponent(
+        `https://youtube138.p.rapidapi.com/search/?q=${encodeURIComponent(
           q
-        )}&hl=id&gl=ID`
+        )}&hl=id&gl=ID`,
+        {
+          method: "GET",
+          headers: {
+            // "X-RapidAPI-Key": `${apiKey[indexApiKey]}`,
+            "X-RapidAPI-Key": process.env.REACT_APP_FIRST_KEY,
+            "X-RapidAPI-Host": "youtube138.p.rapidapi.com",
+          },
+        }
       );
       if (!response.ok) {
         throw new Error(

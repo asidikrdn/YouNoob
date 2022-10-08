@@ -167,7 +167,7 @@ const App = () => {
     }
   });
 
-  // console.log(apiKey);
+  console.log(apiKey);
   // console.log(query);
 
   return (

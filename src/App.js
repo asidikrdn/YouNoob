@@ -13,8 +13,49 @@ const App = () => {
   const [apiKey, setApiKey] = useState(process.env.REACT_APP_FIRST_KEY);
   const [errStatus, setErrStatus] = useState(0);
 
+  const getListVideos = async (q) => {
+    try {
+      setLoading(true);
+      let response = await fetch(
+        `https://youtube138.p.rapidapi.com/search/?q=${encodeURIComponent(
+          q
+        )}&hl=id&gl=ID`,
+        {
+          method: "GET",
+          headers: {
+            "X-RapidAPI-Key": apiKey,
+            "X-RapidAPI-Host": "youtube138.p.rapidapi.com",
+          },
+        }
+      );
+      if (!response.ok) {
+        setErrStatus(response.status);
+        throw new Error(
+          "Error saat mengambil data dengan kode: " + response.status
+        );
+      } else {
+        let data = await response.json();
+        setListVideos(
+          data.contents.filter((el) => {
+            return el.type === "video";
+          })
+        );
+        setListChannels(
+          data.contents.filter((el) => {
+            return el.type === "channel";
+          })
+        );
+        setErrStatus(response.status);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  };
   const getVideoDetails = async (videoId) => {
     try {
+      setLoading(true);
       let response = await fetch(
         `https://youtube138.p.rapidapi.com/video/details/?id=${videoId}&hl=id&gl=ID`,
         {
@@ -42,12 +83,11 @@ const App = () => {
     }
   };
 
-  const getListVideos = async (q) => {
+  const getRelatedVideos = async (videoId) => {
     try {
+      setLoading(true);
       let response = await fetch(
-        `https://youtube138.p.rapidapi.com/search/?q=${encodeURIComponent(
-          q
-        )}&hl=id&gl=ID`,
+        `https://youtube138.p.rapidapi.com/video/related-contents/?id=${videoId}&hl=id&gl=ID`,
         {
           method: "GET",
           headers: {
@@ -96,9 +136,11 @@ const App = () => {
       // console.log("Video");
       let videoId = decodeURI(window.location.search.replace(/\?v=/, ""));
       getVideoDetails(videoId);
+      getRelatedVideos(videoId);
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // console.log(errStatus);
 
@@ -123,8 +165,7 @@ const App = () => {
     else if (errStatus !== 403 && errStatus !== 200) {
       reload();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [errStatus]);
+  });
 
   // console.log(apiKey);
   // console.log(query);
@@ -142,6 +183,7 @@ const App = () => {
         onGetListVideos={getListVideos}
         videoDetails={videoDetails}
         onGetVideoDetails={getVideoDetails}
+        onGetRelatedVideos={getRelatedVideos}
       ></MainContent>
     </Router>
   );

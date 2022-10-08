@@ -37,7 +37,9 @@ const MainContent = (props) => {
             <Video
               loading={props.loading}
               videoDetails={props.videoDetails}
+              listVideos={props.listVideos}
               onGetVideoDetails={props.onGetVideoDetails}
+              onGetRelatedVideos={props.onGetRelatedVideos}
             />
           }
         ></Route>

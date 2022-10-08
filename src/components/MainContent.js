@@ -1,7 +1,7 @@
-import Home from "./contents/Home";
-import SearchResult from "./contents/SearchResult";
+import Home from "./Home";
+import SearchResult from "./SearchResult";
 import { Routes, Route } from "react-router-dom";
-import Video from "./contents/Video";
+import Video from "./Video";
 
 const MainContent = (props) => {
   return (

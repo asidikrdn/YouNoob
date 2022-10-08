@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Col, Container, Row, Spinner } from "react-bootstrap";
 import YouTube from "react-youtube";
 
@@ -9,11 +9,11 @@ const Video = (props) => {
   useEffect(() => {
     videoId.current = decodeURI(window.location.search.replace(/\?v=/, ""));
     props.onGetVideoDetails(videoId.current);
-    console.log(videoId.current);
+    // console.log(videoId.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(props.videoDetails);
+  // console.log(props.videoDetails.description.split("\n"));
 
   return (
     <Container fluid>
@@ -54,8 +54,9 @@ const Video = (props) => {
             <h4 className="me-auto">{props.videoDetails.title}</h4>
             <small className="me-auto">
               {" "}
-              {props.videoDetails.stats !== undefined &&
-                `${props.videoDetails.stats.views.toLocaleString()}x ditonton`}
+              {props.videoDetails.stats !== undefined
+                ? `${props.videoDetails.stats.views.toLocaleString()}x ditonton`
+                : undefined}
               {"  "}
               <i
                 className="fa-solid fa-circle"
@@ -71,34 +72,42 @@ const Video = (props) => {
                   className="rounded-circle me-2"
                   alt=""
                   src={
-                    props.videoDetails.author !== undefined &&
-                    props.videoDetails.author.avatar[
-                      props.videoDetails.author.avatar.length - 1
-                    ].url
+                    props.videoDetails.author !== undefined
+                      ? props.videoDetails.author.avatar[
+                          props.videoDetails.author.avatar.length - 1
+                        ].url
+                      : undefined
                   }
                   width="50"
                 />
               </Col>
               <Col xs={11} className="px-0 mx-0">
                 <p className="py-0 my-0">
-                  {props.videoDetails.author !== undefined &&
-                    props.videoDetails.author.title}
+                  {props.videoDetails.author !== undefined
+                    ? props.videoDetails.author.title
+                    : undefined}
                 </p>
                 <small className="py-0 my-0 opacity-50">
-                  {props.videoDetails.author !== undefined &&
-                    props.videoDetails.author.stats.subscribersText}
+                  {props.videoDetails.author !== undefined
+                    ? props.videoDetails.author.stats.subscribersText
+                    : undefined}
                 </small>
               </Col>
               <Col xs={{ span: 11, offset: 1 }} className="px-0 pt-3">
                 {/* <p>{props.videoDetails.description}</p> */}
-                {props.videoDetails.description !== undefined &&
-                  props.videoDetails.description.split("\n").map((el, i) => {
-                    return (
-                      <p key={i} className="py-0 my-0">
-                        {el}
-                      </p>
-                    );
-                  })}
+                {props.videoDetails.description !== undefined
+                  ? props.videoDetails.description.split("\n").map((el, i) => {
+                      let textDesc;
+                      if (el === "") {
+                        textDesc = <small>&nbsp;</small>;
+                      } else textDesc = el;
+                      return (
+                        <p key={i} className="py-0 my-0">
+                          {textDesc}
+                        </p>
+                      );
+                    })
+                  : undefined}
               </Col>
             </Row>
           </Col>

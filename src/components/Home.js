@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Container, Row, Col, Card } from "react-bootstrap";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 const Home = (props) => {
   useEffect(() => {
@@ -38,7 +38,7 @@ const Home = (props) => {
                     }
                   ></Card.Img>
                   <Card.Body className="ps-0 pt-2">
-                    <Card.Title className="m-0">
+                    <Card.Title as="h6" className="m-0">
                       {content.video.title}
                     </Card.Title>
                     <Card.Subtitle as="small" className="opacity-75">

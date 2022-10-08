@@ -2,7 +2,7 @@ import Header from "./components/Header";
 import Navbar from "./components/Navbar";
 import MainContent from "./components/MainContent";
 import { BrowserRouter as Router } from "react-router-dom";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 const App = () => {
   const [query, setQuery] = useState("");
@@ -11,7 +11,7 @@ const App = () => {
   const [listChannels, setListChannels] = useState([]);
   const [videoDetails, setVideoDetails] = useState([]);
   const [apiKey, setApiKey] = useState(process.env.REACT_APP_FIRST_KEY);
-  const [errStatus, setErrStatus] = useState(false);
+  const [errStatus, setErrStatus] = useState(0);
 
   const getVideoDetails = async (videoId) => {
     try {
@@ -26,14 +26,14 @@ const App = () => {
         }
       );
       if (!response.ok) {
-        setErrStatus(true);
+        setErrStatus(response.status);
         throw new Error(
           "Error saat mengambil data dengan kode: " + response.status
         );
       } else {
         let data = await response.json();
         setVideoDetails(data);
-        setErrStatus(false);
+        setErrStatus(response.status);
       }
     } catch (e) {
       console.log(e);
@@ -57,7 +57,7 @@ const App = () => {
         }
       );
       if (!response.ok) {
-        setErrStatus(true);
+        setErrStatus(response.status);
         throw new Error(
           "Error saat mengambil data dengan kode: " + response.status
         );
@@ -73,7 +73,7 @@ const App = () => {
             return el.type === "channel";
           })
         );
-        setErrStatus(false);
+        setErrStatus(response.status);
       }
     } catch (e) {
       console.log(e);
@@ -82,43 +82,51 @@ const App = () => {
     }
   };
 
+  // Membuat function untuk memanggil ulang API tertentu sesuai posisi halaman
+  const reload = () => {
+    if (window.location.pathname === "/") {
+      // console.log("Home");
+      getListVideos("berita terbaru indonesia");
+    }
+    if (window.location.pathname === "/search") {
+      // console.log("Search");
+      getListVideos(query);
+    }
+    if (window.location.pathname === "/watch") {
+      // console.log("Video");
+      let videoId = decodeURI(window.location.search.replace(/\?v=/, ""));
+      getVideoDetails(videoId);
+    }
+  };
+
   useEffect(() => {
-    if (errStatus === true && apiKey === process.env.REACT_APP_FIRST_KEY) {
-      setApiKey(process.env.REACT_APP_SECOND_KEY);
-    } else if (
-      errStatus === true &&
-      apiKey === process.env.REACT_APP_SECOND_KEY
-    ) {
-      setApiKey(process.env.REACT_APP_THIRD_KEY);
-    } else if (
-      errStatus === true &&
-      apiKey === process.env.REACT_APP_THIRD_KEY
-    ) {
-      setApiKey(process.env.REACT_APP_FOURTH_KEY);
+    // console.log(errStatus);
+
+    // Bila errornya 403, ganti APIkey dan panggil function reload (403 artinya forbidden, biasanya karena api key over quota)
+    if (errStatus === 403) {
+      if (apiKey === process.env.REACT_APP_FIRST_KEY) {
+        console.log("ganti ke key 2");
+        setApiKey(process.env.REACT_APP_SECOND_KEY);
+        reload();
+      } else if (apiKey === process.env.REACT_APP_SECOND_KEY) {
+        console.log("ganti ke key 3");
+        setApiKey(process.env.REACT_APP_THIRD_KEY);
+        reload();
+      } else if (apiKey === process.env.REACT_APP_THIRD_KEY) {
+        console.log("ganti ke key 4");
+        setApiKey(process.env.REACT_APP_FOURTH_KEY);
+        reload();
+      }
+    }
+
+    // Bila terjadi error namun bukan karena forbidden, jalankan reload saja.. (200 artinya sukses, 403 forbidden)
+    else if (errStatus !== 403 && errStatus !== 200) {
+      reload();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errStatus]);
 
-  useEffect(() => {
-    if (errStatus === true) {
-      if (window.location.pathname === "/") {
-        console.log("Home");
-        getListVideos("berita terbaru indonesia");
-      }
-      if (window.location.pathname === "/search") {
-        console.log("Search");
-        getListVideos(query);
-      }
-      if (window.location.pathname === "/watch") {
-        console.log("Video");
-        let videoId = decodeURI(window.location.search.replace(/\?v=/, ""));
-        getVideoDetails(videoId);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiKey]);
-
-  console.log(apiKey);
+  // console.log(apiKey);
   // console.log(query);
 
   return (

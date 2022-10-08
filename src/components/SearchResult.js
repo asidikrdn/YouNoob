@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Card, Col, Container, Row, Spinner } from "react-bootstrap";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 const SearchResult = (props) => {
   useEffect(() => {
@@ -60,11 +60,13 @@ const SearchResult = (props) => {
                         </Col>
                         <Col md={8}>
                           <Card.Body className="pt-0 ps-0">
-                            <Card.Title as="h4" className="mb-0">
+                            <Card.Title as="h5" className="mb-0">
                               {content.video.title}
                             </Card.Title>
                             <Card.Subtitle as="small" className="opacity-75">
-                              {`${content.video.stats.views}x ditonton`}
+                              {content.video.stats.views !== undefined
+                                ? `${content.video.stats.views.toLocaleString()}x ditonton`
+                                : `LIVE`}
                               {"  "}
                               <i
                                 className="fa-solid fa-circle"

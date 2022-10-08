@@ -1,7 +1,7 @@
-import Home from "./contents/Home";
-import SearchResult from "./contents/SearchResult";
+import Home from "./Home";
+import SearchResult from "./SearchResult";
 import { Routes, Route } from "react-router-dom";
-import Video from "./contents/Video";
+import Video from "./Video";
 
 const MainContent = (props) => {
   return (
@@ -31,7 +31,18 @@ const MainContent = (props) => {
             ></SearchResult>
           }
         ></Route>
-        <Route path="/watch" element={<Video />}></Route>
+        <Route
+          path="/watch"
+          element={
+            <Video
+              loading={props.loading}
+              videoDetails={props.videoDetails}
+              listVideos={props.listVideos}
+              onGetVideoDetails={props.onGetVideoDetails}
+              onGetRelatedVideos={props.onGetRelatedVideos}
+            />
+          }
+        ></Route>
       </Routes>
     </main>
   );
